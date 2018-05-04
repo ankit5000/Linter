@@ -51,30 +51,9 @@ class Linter:
  				curlyNumber -= 1
  				checkCurly = True
 
- 			if(not(re.match("[\t]{" + str(curlyNumber) + "}\w*", self.content[i])) and checkCurly == False):
+ 			if(not(re.match("[\t]{" + str(curlyNumber) + "}[^\t\ ]", self.content[i])) and \
+ 			not(re.match("[\ ]{" + str(curlyNumber*4) + "}[^\t\ ]", self.content[i])) and checkCurly == False):
  				fail += 1
-
- 			# for j in range(len(self.content[i])):
-
- 			# 	if(self.content[i][j] == ' ' and countSpace == True):
- 			# 		numberOfSpaces += 1
-
- 			# 	if(self.content[i][j] == '\t' and countSpace == True):
- 			# 		numberOfSpaces += 4
-
- 			# 	if(self.content[i][j] == '{'):
- 			# 		curlyNumber += 1
- 			# 		countSpace = False
-
- 			# 	elif(self.content[i][j] == '}'):
- 			# 		curlyNumber -= 1
- 			# 		countSpace = False
-
- 			# 	if((self.content[i][j] != ' ' and self.content[i][j] != '\t') and countSpace == True):
- 			# 		countSpace = False
-
- 			# 		if(numberOfSpaces != 4*curlyNumber):
- 			# 			fail += 1
 
  		return (float(numberOfLines - fail)/numberOfLines)*100.0			
 
