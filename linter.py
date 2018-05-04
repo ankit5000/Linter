@@ -39,39 +39,42 @@ class Linter:
  		success = 0
  		for i in range(len(self.content)):
 
+ 			checkCurly = False
  			countSpace = True
  			numberOfSpaces = 0
 
- 			# if(OPENING_BRACKET_REGEX.search(self.content[i])):
- 			# 	curlyNumber += 1
+ 			if(OPENING_BRACKET_REGEX.search(self.content[i])):
+ 				curlyNumber += 1
+ 				checkCurly = True
 
- 			# if(CLOSING_BRACKET_REGEX.search(self.content[i])):
- 			# 	curlyNumber -= 1
+ 			if(CLOSING_BRACKET_REGEX.search(self.content[i])):
+ 				curlyNumber -= 1
+ 				checkCurly = True
 
- 			# if(re.match("[\t]{" + str(curlyNumber) + "}\w*", self.content[i])):
- 			# 	success += 1
+ 			if(not(re.match("[\t]{" + str(curlyNumber) + "}\w*", self.content[i])) and checkCurly == False):
+ 				fail += 1
 
- 			for j in range(len(self.content[i])):
+ 			# for j in range(len(self.content[i])):
 
- 				if(self.content[i][j] == ' ' and countSpace == True):
- 					numberOfSpaces += 1
+ 			# 	if(self.content[i][j] == ' ' and countSpace == True):
+ 			# 		numberOfSpaces += 1
 
- 				if(self.content[i][j] == '\t' and countSpace == True):
- 					numberOfSpaces += 4
+ 			# 	if(self.content[i][j] == '\t' and countSpace == True):
+ 			# 		numberOfSpaces += 4
 
- 				if(self.content[i][j] == '{'):
- 					curlyNumber += 1
- 					countSpace = False
+ 			# 	if(self.content[i][j] == '{'):
+ 			# 		curlyNumber += 1
+ 			# 		countSpace = False
 
- 				elif(self.content[i][j] == '}'):
- 					curlyNumber -= 1
- 					countSpace = False
+ 			# 	elif(self.content[i][j] == '}'):
+ 			# 		curlyNumber -= 1
+ 			# 		countSpace = False
 
- 				if((self.content[i][j] != ' ' and self.content[i][j] != '\t') and countSpace == True):
- 					countSpace = False
+ 			# 	if((self.content[i][j] != ' ' and self.content[i][j] != '\t') and countSpace == True):
+ 			# 		countSpace = False
 
- 					if(numberOfSpaces != 4*curlyNumber):
- 						fail += 1
+ 			# 		if(numberOfSpaces != 4*curlyNumber):
+ 			# 			fail += 1
 
  		return (float(numberOfLines - fail)/numberOfLines)*100.0			
 
@@ -80,5 +83,3 @@ class Linter:
 if __name__ == '__main__':
 	myLint = Linter(sys.argv[1])
 	myLint.getScore()		
-
-
