@@ -60,6 +60,24 @@ class Linter:
 
  		return (float(numberOfLines - fail)/numberOfLines)*100.0
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
  	def comment(self):
 		cnt = 0
 		check = False
