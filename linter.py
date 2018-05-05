@@ -100,10 +100,10 @@ class Linter:
 		commScore = 100*(float(numberOfComments)/self.totalLines)
 
 		if(commScore > 20):
-			print "Number of comments: Appropriate" + " (" + '%.2f' % (20*(float(numberOfComments)/self.totalLines)) + "/20.00" + ")"
+			print "Number of comments: Appropriate" + " (" + '%.2f' % min(20, 20*(float(numberOfComments*3)/self.totalLines)) + "/20.00" + ")"
 
 		else:
-			print "Number of comments: Not Sufficient" + " (" + '%.2f' % (20*(float(numberOfComments)/self.totalLines)) + "/20.00" + ")"
+			print "Number of comments: Not Sufficient" + " (" + '%.2f' % min(20, 20*(float(numberOfComments*3)/self.totalLines)) + "/20.00" + ")"
 
 		return numberOfComments
 
@@ -168,7 +168,7 @@ class Linter:
 		p4 = self.blankLine()
 		p5,numberOfFunctions = self.functionAvail()
 
-		self.score += 10*(1 - float(p1)/self.totalLines) + 50*(1 - float(p2)/self.totalLines) + 20*(float(p3)/self.totalLines) + \
+		self.score += 10*(1 - float(p1)/self.totalLines) + 50*(1 - float(p2)/self.totalLines) + min(20, 20*(float(p3*3)/self.totalLines)) + \
 		 10*(1 - float(p5)/numberOfFunctions)
 
 		if(100*(float(p4)/self.totalLines) < 60 and 100*(float(p4)/self.totalLines) > 10):

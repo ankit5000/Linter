@@ -1,20 +1,10 @@
 #include
 using namespace std;
-uditt // usd
-
-/*udf
-fddg
-sa
-as*/
-
-
-
-
 
 class b
 {
     public:
-    virtual void show() // jisdcf
+    virtual void show()
     {
         cout<<"\n  Showing base class....";
     }
