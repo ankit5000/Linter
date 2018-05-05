@@ -1,0 +1,15 @@
+LONG LINES REPORT: 
+No long lines
+
+INDENTATION REPORT:
+All lines properly indented
+
+COMMENTS REPORT
+No of comments in the code: 7
+No of comments ideal for your code: 10
+
+BLANK LINE REPORT
+No of blank lines in the code: 2
+
+FUNCTION LENGTH REPORT
+No long functions

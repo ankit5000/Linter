@@ -14,13 +14,13 @@ FUNCTION_REGEX = re.compile("(?![a-z])[^\:,>,\.]([a-z,A-Z]+[_]*[a-z,A-Z]*)+[(]")
 
 class Linter:
 
-	def __init__(self,filePath):
+	def __init__(self,filePath, reportPath):
 		self.content = []
 		self.readFile(filePath)
 		self.totalLines = len(self.content)
 		self.maxLineLength = 80
 		self.score = 0
-
+		self.file_writer = open(reportPath, "w")
 
 	def readFile(self,filePath):
 		with open(filePath) as f:
@@ -34,15 +34,19 @@ class Linter:
 
  	def testLineLength(self):
  		longLines = 0
+		self.file_writer.write('LONG LINES REPORT: \n')
  		for i in range(self.totalLines):
  			if(len(self.content[i]) > self.maxLineLength):
  				longLines += 1
-
+				self.file_writer.write('Line %d: %s'%(i+1, self.content[i]))
+		if (longLines==0):
+			self.file_writer.write('No long lines\n')
  		print "Number Of Long Lines: " + str(longLines) + " (" + '%.2f' % (10*(1 - float(longLines)/self.totalLines)) + "/10.00)"
  		return longLines
 
 
  	def indentation(self):
+		self.file_writer.write('\nINDENTATION REPORT:\n')
  		curlyNumber = 0
  		fail = 0
  		success = 0
@@ -61,9 +65,11 @@ class Linter:
  				checkCurly = True
 
  			if(not(re.match("[\t]{" + str(curlyNumber) + "}[^\t\ ]", self.content[i])) and \
- 			not(re.match("[\ ]{" + str(curlyNumber*4) + "}[^\t\ ]", self.content[i])) and checkCurly == False):
+ 			not(re.match("[\ ]{" + str(curlyNumber*4) + "}[^\t\ ]", self.content[i])) and checkCurly == False and self.content[i]!="\n"):
  				fail += 1
-
+				self.file_writer.write('Bad indentation in Line %d\n'%(i+1))
+		if (fail==0):
+			self.file_writer.write('All lines properly indented\n')
  		indScore = 100*(1 - float(fail)/self.totalLines)
 
  		if(indScore > 90):
@@ -81,6 +87,7 @@ class Linter:
  	def comment(self):
 		numberOfComments = 0
 		check = False
+		self.file_writer.write('\nCOMMENTS REPORT\n')
 		for i in range(self.totalLines):
 			if(COMMENT_1_REGEX.search(self.content[i])):
 				numberOfComments += 1
@@ -97,9 +104,12 @@ class Linter:
 			elif(check):
 				temp += 1
 
-		commScore = 100*(float(numberOfComments)/self.totalLines)
+		commScore = 100*(float(numberOfComments*3)/self.totalLines)
 
-		if(commScore > 20):
+		self.file_writer.write('No of comments in the code: %d\n'%(numberOfComments))
+		self.file_writer.write('No of comments ideal for your code: %d\n'%(self.totalLines/3))
+
+		if(commScore >= 20):
 			print "Number of comments: Appropriate" + " (" + '%.2f' % min(20, 20*(float(numberOfComments*3)/self.totalLines)) + "/20.00" + ")"
 
 		else:
@@ -109,12 +119,14 @@ class Linter:
 
 
 	def blankLine(self):
+		self.file_writer.write('\nBLANK LINE REPORT\n')
 		numberOfBlankLines = 0
 		for i in range(self.totalLines):
 			if(BLANK_LINE_REGEX.match(self.content[i])):
 				numberOfBlankLines += 1
 
 		blankScore = 100*(float(numberOfBlankLines)/self.totalLines)
+		self.file_writer.write('No of blank lines in the code: %d\n'%(numberOfBlankLines))
 
 		if(blankScore > 60):
 			print "Blank Lines: Too Many " + "(7.00/10.00)"
@@ -129,7 +141,9 @@ class Linter:
 
 
 	def functionAvail(self):
+		self.file_writer.write('\nFUNCTION LENGTH REPORT\n')
 		cnt = []
+		func_name = ''
 		check = False
 		temp = 0
 		brack = 0
@@ -141,6 +155,7 @@ class Linter:
 				error = 0
 				brack = 0
 				check = True
+				func_name = strng
 			if(check and OPENING_BRACKET_REGEX.search(strng)):
 				brack += 1
 			elif(check and CLOSING_BRACKET_REGEX.search(strng)):
@@ -149,10 +164,13 @@ class Linter:
 				total += 1
 				if temp > 20:
 					cnt.append(temp)
+					self.file_writer.write('Long function : %s\n'%(func_name))
 				temp = 0
 				check = False
 			temp += 1
 			error += 1
+		if len(cnt)==0:
+			self.file_writer.write('No long functions\n')
 
 		print "Number of long functions:" + str(len(cnt)) + " (" + '%.2f' % (10*(1 - float(len(cnt))/self.totalLines)) + "/10.00" + ")"
 
@@ -180,5 +198,5 @@ class Linter:
 
 
 if __name__ == '__main__':
-	myLint = Linter(sys.argv[1])
+	myLint = Linter(sys.argv[1], sys.argv[2])
 	myLint.getScore()

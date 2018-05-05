@@ -6,11 +6,36 @@ class b
     public:
     virtual void show()
     {
-        cout<<"\n  Showing base class....";
+        cout<<"\n  Showidsang base class.... Showidsang Showidsang Showidsang Showidsang Showidsang Showidsang Showidsang Showidsang ";
     }
     void display()
     {
         cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+         cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+            cout<<"\n  Displaying base class...." ;
+        cout<<"\n  Displaying base class...." ;
+
+        cout<<"\n  Displaying base class...." ;
+
+        cout<<"\n  Displaying base class...." ;
+            cout<<"\n  Displaying base class...." ;
     }
 };
 
