@@ -7,6 +7,8 @@ CLOSING_BRACKET_REGEX = re.compile("[\}]")
 COMMENT_1_REGEX = re.compile(r'\/{2}')
 COMMENT_2_OPEN_REGEX = re.compile(r'\/\*')
 COMMENT_2_CLOSE_REGEX = re.compile(r'\*\/')
+
+BLANK_LINE_REGEX = re.compile("\n")
 class Linter:
 
 	def __init__(self,filePath):
@@ -18,6 +20,8 @@ class Linter:
 		self.testLineLength()
 		print self.indentation()
 		self.comment()
+		self.blankLine()
+
 	def readFile(self,filePath):
 		with open(filePath) as f:
 			self.content = f.readlines()
@@ -77,7 +81,7 @@ class Linter:
 
 
 
-		
+
  	def comment(self):
 		cnt = 0
 		check = False
@@ -96,6 +100,13 @@ class Linter:
 				temp = 0
 			elif(check):
 				temp += 1
+		print cnt
+
+	def blankLine(self):
+		cnt = 0
+		for strng in self.content:
+			if(BLANK_LINE_REGEX.match(strng)):
+				cnt += 1
 		print cnt
 
 if __name__ == '__main__':
