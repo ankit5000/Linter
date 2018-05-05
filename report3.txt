@@ -1,15 +1,18 @@
 LONG LINES REPORT: 
-No long lines
+Line 9:         cout<<"\n  Showidsang base class.... Showidsang Showidsang Showidsang Showidsang Showidsang Showidsang Showidsang Showidsang ";
 
 INDENTATION REPORT:
-All lines properly indented
+Bad indentation in Line 30
+Bad indentation in Line 32
+Bad indentation in Line 38
 
 COMMENTS REPORT
-No of comments in the code: 7
-No of comments ideal for your code: 10
+No of comments in the code: 0
+No of comments ideal for your code: 21
 
 BLANK LINE REPORT
-No of blank lines in the code: 2
+No of blank lines in the code: 5
 
 FUNCTION LENGTH REPORT
-No long functions
+Long function :     void display()
+

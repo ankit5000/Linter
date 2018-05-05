@@ -35,13 +35,18 @@ class Linter:
  	def testLineLength(self):
  		longLines = 0
 		self.file_writer.write('LONG LINES REPORT: \n')
+
  		for i in range(self.totalLines):
  			if(len(self.content[i]) > self.maxLineLength):
  				longLines += 1
 				self.file_writer.write('Line %d: %s'%(i+1, self.content[i]))
+
 		if (longLines==0):
 			self.file_writer.write('No long lines\n')
- 		print "Number Of Long Lines: " + str(longLines) + " (" + '%.2f' % (10*(1 - float(longLines)/self.totalLines)) + "/10.00)"
+
+ 		print "Number Of Long Lines: " + str(longLines) + " (" + \
+		'%.2f' % (10*(1 - float(longLines)/self.totalLines)) + "/10.00)"
+
  		return longLines
 
 
@@ -68,6 +73,7 @@ class Linter:
  			not(re.match("[\ ]{" + str(curlyNumber*4) + "}[^\t\ ]", self.content[i])) and checkCurly == False and self.content[i]!="\n"):
  				fail += 1
 				self.file_writer.write('Bad indentation in Line %d\n'%(i+1))
+
 		if (fail==0):
 			self.file_writer.write('All lines properly indented\n')
  		indScore = 100*(1 - float(fail)/self.totalLines)
@@ -110,10 +116,12 @@ class Linter:
 		self.file_writer.write('No of comments ideal for your code: %d\n'%(self.totalLines/3))
 
 		if(commScore >= 20):
-			print "Number of comments: Appropriate" + " (" + '%.2f' % min(20, 20*(float(numberOfComments*3)/self.totalLines)) + "/20.00" + ")"
+			print "Number of comments: Appropriate" + " (" + \
+			'%.2f' % min(20, 20*(float(numberOfComments*3)/self.totalLines)) + "/20.00" + ")"
 
 		else:
-			print "Number of comments: Not Sufficient" + " (" + '%.2f' % min(20, 20*(float(numberOfComments*3)/self.totalLines)) + "/20.00" + ")"
+			print "Number of comments: Not Sufficient" + " (" + \
+			 '%.2f' % min(20, 20*(float(numberOfComments*3)/self.totalLines)) + "/20.00" + ")"
 
 		return numberOfComments
 
