@@ -10,6 +10,8 @@ COMMENT_2_CLOSE_REGEX = re.compile(r'\*\/')
 
 BLANK_LINE_REGEX = re.compile("\n")
 
+FUNCTION_REGEX = re.compile("(?![a-z])[^\:,>,\.]([a-z,A-Z]+[_]*[a-z,A-Z]*)+[(]")
+
 class Linter:
 
 	def __init__(self,filePath):
@@ -115,15 +117,47 @@ class Linter:
 		blankScore = 100*(float(numberOfBlankLines)/self.totalLines)
 
 		if(blankScore > 60):
-			print "Blank Lines: Too Many" + " (" + '%.2f' % (20*(float(numberOfBlankLines)/self.totalLines)) + "/20.00" + ")"
+			print "Blank Lines: Too Many" + " (" + '%.2f' % (10*(float(numberOfBlankLines)/self.totalLines)) + "/10.00" + ")"
 
 		elif(blankScore > 10):	
-			print "Blank Lines: Appropriate" + " (" + '%.2f' % (20*(float(numberOfBlankLines)/self.totalLines)) + "/20.00" + ")"
+			print "Blank Lines: Appropriate" + " (" + '%.2f' % (10*(float(numberOfBlankLines)/self.totalLines)) + "/10.00" + ")"
 
 		else:
-			print "Blank Lines: Very Few" + " (" + '%.2f' % (20*(float(numberOfBlankLines)/self.totalLines)) + "/20.00" + ")"
+			print "Blank Lines: Very Few" + " (" + '%.2f' % (10*(float(numberOfBlankLines)/self.totalLines)) + "/10.00" + ")"
 			
 		return numberOfBlankLines
+
+
+	def functionAvail(self):
+		cnt = []
+		check = False
+		temp = 0
+		brack = 0
+		error = 0
+		total = 0
+		for strng in self.content:
+			if(FUNCTION_REGEX.search(strng)):
+				temp = 1
+				error = 0
+				brack = 0
+				check = True
+			if(check and OPENING_BRACKET_REGEX.search(strng)):
+				brack += 1
+			elif(check and CLOSING_BRACKET_REGEX.search(strng)):
+				brack -= 1
+			if(check and brack == 0 and error != 0):
+				total += 1
+				if temp > 20:
+					cnt.append(temp)
+				temp = 0
+				check = False
+			temp += 1
+			error += 1
+		
+		print "Number of long functions:" + str(len(cnt)) + " (" + '%.2f' % (10*(float(len(cnt))/self.totalLines)) + "/10.00" + ")"
+
+		return len(cnt),total
+
 
 
 	def getScore(self):
@@ -132,13 +166,15 @@ class Linter:
 		p2 = self.indentation()
 		p3 = self.comment()
 		p4 = self.blankLine()
+		p5,numberOfFunctions = self.functionAvail()
 
-		self.score += 10*(1 - float(p1)/self.totalLines) + 50*(1 - float(p2)/self.totalLines) + 20*(float(p3)/self.totalLines)
+		self.score += 10*(1 - float(p1)/self.totalLines) + 50*(1 - float(p2)/self.totalLines) + 20*(float(p3)/self.totalLines) + \
+		 10*(1 - float(p5)/numberOfFunctions)
 		
 		if(100*(float(p4)/self.totalLines) < 60 and 100*(float(p4)/self.totalLines) > 10):
-			self.score += 20.0
+			self.score += 10.0
 		else:
-			self.score += 15.0
+			self.score += 7.0
 
 		print "Code Beauty Metric: " + '%.2f' % self.score + "%"	
 
