@@ -9,42 +9,42 @@ COMMENT_2_OPEN_REGEX = re.compile(r'\/\*')
 COMMENT_2_CLOSE_REGEX = re.compile(r'\*\/')
 
 BLANK_LINE_REGEX = re.compile("\n")
+
 class Linter:
 
 	def __init__(self,filePath):
 		self.content = []
 		self.readFile(filePath)
-		self.maxLineLength = 600
+		self.totalLines = len(self.content)
+		self.maxLineLength = 80
+		self.score = 0
 
-	def getScore(self):
-		self.testLineLength()
-		print self.indentation()
-		self.comment()
-		self.blankLine()
 
 	def readFile(self,filePath):
 		with open(filePath) as f:
 			self.content = f.readlines()
-		# you may also want to remove whitespace characters like `\n` at the end of each line
-		#self.content = [x.strip() for x in self.content]
 
 
 	def printContent(self):
-		for i in range(len(self.content)):
+		for i in range(self.totalLines):
  			print len(self.content[i])
 
 
  	def testLineLength(self):
- 		for i in range(len(self.content)):
+ 		longLines = 0
+ 		for i in range(self.totalLines):
  			if(len(self.content[i]) > self.maxLineLength):
- 				print "this line is too long: " + self.content[i]
+ 				longLines += 1
+
+ 		print "Number Of Long Lines: " + str(longLines) + " (" + '%.2f' % (10*(1 - float(longLines)/self.totalLines)) + "/10.00)"
+ 		return longLines
+
 
  	def indentation(self):
  		curlyNumber = 0
- 		numberOfLines = len(self.content)
  		fail = 0
  		success = 0
- 		for i in range(len(self.content)):
+ 		for i in range(self.totalLines):
 
  			checkCurly = False
  			countSpace = True
@@ -62,52 +62,86 @@ class Linter:
  			not(re.match("[\ ]{" + str(curlyNumber*4) + "}[^\t\ ]", self.content[i])) and checkCurly == False):
  				fail += 1
 
- 		return (float(numberOfLines - fail)/numberOfLines)*100.0
+ 		indScore = 100*(1 - float(fail)/self.totalLines)
+ 		
+ 		if(indScore > 90):
+ 			print "Indentation: Good " + "(" + '%.2f' % (indScore/2.0) + "/50.00" + ")"
 
+ 		elif(indScore > 60):
+ 			print "Indentation: Average " + "(" + '%.2f' % (indScore/2.0) + "/50.00" + ")"
 
+ 		else:
+ 			print "Indentation: Poor " + "(" + '%.2f' % (indScore/2.0) + "/50.00" + ")"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 		return fail
 
 
  	def comment(self):
-		cnt = 0
+		numberOfComments = 0
 		check = False
-		for strng in self.content:
-			if(COMMENT_1_REGEX.search(strng)):
-				cnt += 1
+		for i in range(self.totalLines):
+			if(COMMENT_1_REGEX.search(self.content[i])):
+				numberOfComments += 1
 		temp = 0;
-		for strng in self.content:
-			if(COMMENT_2_OPEN_REGEX.search(strng)):
+		for i in range(self.totalLines):
+			if(COMMENT_2_OPEN_REGEX.search(self.content[i])):
 				temp = 1
 				check = True
-			elif(COMMENT_2_CLOSE_REGEX.search(strng) and check):
+			elif(COMMENT_2_CLOSE_REGEX.search(self.content[i]) and check):
 				temp += 1
 				check = False
-				cnt += temp
+				numberOfComments += temp
 				temp = 0
 			elif(check):
 				temp += 1
-		print cnt
+
+		commScore = 100*(float(numberOfComments)/self.totalLines)
+
+		if(commScore > 20):
+			print "Number of comments: Appropriate" + " (" + '%.2f' % (20*(float(numberOfComments)/self.totalLines)) + "/20.00" + ")"
+
+		else:
+			print "Number of comments: Not Sufficient" + " (" + '%.2f' % (20*(float(numberOfComments)/self.totalLines)) + "/20.00" + ")"
+
+		return numberOfComments
+
 
 	def blankLine(self):
-		cnt = 0
-		for strng in self.content:
-			if(BLANK_LINE_REGEX.match(strng)):
-				cnt += 1
-		print cnt
+		numberOfBlankLines = 0
+		for i in range(self.totalLines):
+			if(BLANK_LINE_REGEX.match(self.content[i])):
+				numberOfBlankLines += 1
+
+		blankScore = 100*(float(numberOfBlankLines)/self.totalLines)
+
+		if(blankScore > 60):
+			print "Blank Lines: Too Many" + " (" + '%.2f' % (20*(float(numberOfBlankLines)/self.totalLines)) + "/20.00" + ")"
+
+		elif(blankScore > 10):	
+			print "Blank Lines: Appropriate" + " (" + '%.2f' % (20*(float(numberOfBlankLines)/self.totalLines)) + "/20.00" + ")"
+
+		else:
+			print "Blank Lines: Very Few" + " (" + '%.2f' % (20*(float(numberOfBlankLines)/self.totalLines)) + "/20.00" + ")"
+			
+		return numberOfBlankLines
+
+
+	def getScore(self):
+		
+		p1 = self.testLineLength()
+		p2 = self.indentation()
+		p3 = self.comment()
+		p4 = self.blankLine()
+
+		self.score += 10*(1 - float(p1)/self.totalLines) + 50*(1 - float(p2)/self.totalLines) + 20*(float(p3)/self.totalLines)
+		
+		if(100*(float(p4)/self.totalLines) < 60 and 100*(float(p4)/self.totalLines) > 10):
+			self.score += 20.0
+		else:
+			self.score += 15.0
+
+		print "Code Beauty Metric: " + '%.2f' % self.score + "%"	
+
 
 if __name__ == '__main__':
 	myLint = Linter(sys.argv[1])
