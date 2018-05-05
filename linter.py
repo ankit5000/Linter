@@ -65,7 +65,7 @@ class Linter:
  				fail += 1
 
  		indScore = 100*(1 - float(fail)/self.totalLines)
- 		
+
  		if(indScore > 90):
  			print "Indentation: Good " + "(" + '%.2f' % (indScore/2.0) + "/50.00" + ")"
 
@@ -117,14 +117,14 @@ class Linter:
 		blankScore = 100*(float(numberOfBlankLines)/self.totalLines)
 
 		if(blankScore > 60):
-			print "Blank Lines: Too Many" + " (" + '%.2f' % (10*(float(numberOfBlankLines)/self.totalLines)) + "/10.00" + ")"
+			print "Blank Lines: Too Many " + "(7.00/10.00)"
 
-		elif(blankScore > 10):	
-			print "Blank Lines: Appropriate" + " (" + '%.2f' % (10*(float(numberOfBlankLines)/self.totalLines)) + "/10.00" + ")"
+		elif(blankScore > 10):
+			print "Blank Lines: Appropriate " + "(10.00/10.00)"
 
 		else:
-			print "Blank Lines: Very Few" + " (" + '%.2f' % (10*(float(numberOfBlankLines)/self.totalLines)) + "/10.00" + ")"
-			
+			print "Blank Lines: Very Few " + "(7.00/10.00)"
+
 		return numberOfBlankLines
 
 
@@ -153,15 +153,15 @@ class Linter:
 				check = False
 			temp += 1
 			error += 1
-		
-		print "Number of long functions:" + str(len(cnt)) + " (" + '%.2f' % (10*(float(len(cnt))/self.totalLines)) + "/10.00" + ")"
+
+		print "Number of long functions:" + str(len(cnt)) + " (" + '%.2f' % (10*(1 - float(len(cnt))/self.totalLines)) + "/10.00" + ")"
 
 		return len(cnt),total
 
 
 
 	def getScore(self):
-		
+
 		p1 = self.testLineLength()
 		p2 = self.indentation()
 		p3 = self.comment()
@@ -170,13 +170,13 @@ class Linter:
 
 		self.score += 10*(1 - float(p1)/self.totalLines) + 50*(1 - float(p2)/self.totalLines) + 20*(float(p3)/self.totalLines) + \
 		 10*(1 - float(p5)/numberOfFunctions)
-		
+
 		if(100*(float(p4)/self.totalLines) < 60 and 100*(float(p4)/self.totalLines) > 10):
 			self.score += 10.0
 		else:
 			self.score += 7.0
 
-		print "Code Beauty Metric: " + '%.2f' % self.score + "%"	
+		print "Code Beauty Metric: " + '%.2f' % self.score + "%"
 
 
 if __name__ == '__main__':
