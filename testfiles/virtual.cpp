@@ -27,8 +27,7 @@ class b
 class d:public b
 {
     public:
-    void display()
-    {
+    void display() {
         cout<<"\n  Displaying derived class....";
     }
     void show()
@@ -37,8 +36,7 @@ class d:public b
     }
 };
 
-int main()
-{
+int main() {
     b B;
     b *ptr;
     cout<<"\n\t P points to base:\n" ; ptr=&B; ptr->display();

@@ -9,6 +9,8 @@ COMMENT_2_OPEN_REGEX = re.compile(r'\/\*')
 COMMENT_2_CLOSE_REGEX = re.compile(r'\*\/')
 
 BLANK_LINE_REGEX = re.compile("\n")
+
+FUNCTION_REGEX = re.compile("(?![a-z])[^\:,>,\.]([a-z,A-Z]+[_]*[a-z,A-Z]*)+[(]")
 class Linter:
 
 	def __init__(self,filePath):
@@ -21,6 +23,7 @@ class Linter:
 		print self.indentation()
 		self.comment()
 		self.blankLine()
+		self.functionAvail()
 
 	def readFile(self,filePath):
 		with open(filePath) as f:
@@ -64,24 +67,6 @@ class Linter:
 
  		return (float(numberOfLines - fail)/numberOfLines)*100.0
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  	def comment(self):
 		cnt = 0
 		check = False
@@ -109,6 +94,29 @@ class Linter:
 				cnt += 1
 		print cnt
 
+	def functionAvail(self):
+		cnt = []
+		check = False
+		temp = 0
+		brack = 0
+		error = 0
+		for strng in self.content:
+			if(FUNCTION_REGEX.search(strng)):
+				temp = 1
+				error = 0
+				brack = 0
+				check = True
+			if(check and OPENING_BRACKET_REGEX.search(strng)):
+				brack += 1
+			elif(check and CLOSING_BRACKET_REGEX.search(strng)):
+				brack -= 1
+			if(check and brack == 0 and error != 0):
+				cnt.append(temp)
+				temp = 0
+				check = False
+			temp += 1
+			error += 1
+		print cnt
 if __name__ == '__main__':
 	myLint = Linter(sys.argv[1])
 	myLint.getScore()
